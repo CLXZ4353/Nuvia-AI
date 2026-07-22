@@ -1,0 +1,63 @@
+# Render.com Blueprint – Research Digest Agent
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: research-digest
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash scripts/start-render.sh
+    healthCheckPath: /api/config
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: RESEARCH_DIGEST_CONFIG_PATH
+        value: config.yaml
+      - key: RESEARCH_DIGEST_ENV
+        value: production
+      - key: RESEARCH_DIGEST_API_BASE_URL
+        value: /api
+      - key: FIREBASE_ENABLED
+        value: "true"
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CREDENTIALS_JSON
+        sync: false
+      - key: FIREBASE_WEB_API_KEY
+        sync: false
+      - key: FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: FIREBASE_APP_ID
+        sync: false
+      - key: FIREBASE_VAPID_KEY
+        sync: false
+      - key: FIREBASE_DEFAULT_TOPIC
+        value: research-digest
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_USERNAME
+        sync: false
+      - key: TELEGRAM_POLLING_ENABLED
+        value: "true"
+      - key: TELEGRAM_POLL_INTERVAL_SECONDS
+        value: "15"
+      - key: TELEGRAM_AUTO_GENERATE_DIGEST
+        value: "true"
+      - key: TELEGRAM_DIGEST_CONFIG_PATH
+        value: config.yaml

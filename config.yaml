@@ -1,0 +1,138 @@
+beat: "ricerca_ai_modelli"
+beat_slug: "ricerca-ai-modelli"
+beat_description: "Nuovi paper rilevanti, rilasci di modelli, benchmark"
+max_voci: 10
+max_turns: 12
+model: "gemini/gemini-3.5-flash"
+
+recency:
+  # Ogni digest giornaliero contribuisce al riepilogo della settimana ISO in
+  # corso.  In questo modo l'invio del venerdì raccoglie con precisione le
+  # notizie da lunedì a venerdì, senza trascinare voci del fine settimana
+  # precedente.
+  mode: "current_week"
+  require_publication_date: true
+
+schedule:
+  # Orario di riferimento in ora locale italiana: il job deve partire alle
+  # 09:00 sia in ora solare (CET) sia in ora legale (CEST). GitHub Actions
+  # accetta solo cron in UTC, quindi la pianificazione effettiva vive nel
+  # workflow (.github/workflows/digest.yml), che scatta a entrambi gli
+  # orari UTC possibili e lascia decidere all'ora reale di Europe/Rome se
+  # eseguire davvero il job. Questo campo resta il riferimento "in chiaro"
+  # dell'orario voluto e la timezone usata da tutta l'app (agente, home
+  # page, Cronologia, newsletter, Telegram) per calcolare data/ora corrente.
+  cron: "0 9 * * 1-5"
+  timezone: "Europe/Rome"
+  # 0 = lunedì ... 4 = venerdì. Newsletter e Telegram usano la stessa
+  # pubblicazione settimanale della homepage.
+  weekly_delivery_day: 4
+
+web:
+  # Public runtime configuration consumed by the vanilla frontend.
+  # Leave this relative to keep cookies and API calls same-origin behind a proxy.
+  api_base_url: "/api"
+  request_timeout_ms: 20000
+  environment: "production"
+  timezone: "Europe/Rome"
+
+source_catalog:
+  path: "data/source_catalog.yaml"
+  remote_url: null
+  min_trust_score: 4
+  max_sources_per_run: 26
+  allow_unlisted_domains: false
+  authoritative_domains:
+    - "arxiv.org"
+    - "rss.arxiv.org"
+    - "huggingface.co"
+    - "openai.com"
+    - "anthropic.com"
+    - "deepmind.google"
+    - "research.google"
+    - "blog.google"
+    - "ai.meta.com"
+    - "mistral.ai"
+    - "lmarena.ai"
+    - "arena.ai"
+    - "developer.nvidia.com"
+    - "higgsfield.ai"
+    - "midjourney.com"
+    - "lumalabs.ai"
+    - "runwayml.com"
+    - "kling.ai"
+    - "labs.google"
+    - "adobe.com"
+    - "kimi.com"
+    - "krea.ai"
+    - "meshy.ai"
+    - "qwenlm.github.io"
+
+sources: []
+fonti:
+  - nome: "arXiv - cs.AI"
+    url: "https://rss.arxiv.org/rss/cs.AI"
+    max: 30
+  - nome: "arXiv - cs.CL"
+    url: "https://rss.arxiv.org/rss/cs.CL"
+    max: 30
+  - nome: "Hugging Face - Daily Papers"
+    url: "https://huggingface.co/papers"
+    max: 20
+
+demo:
+  feed_path: "sample-output/sample-feed.xml"
+  out_dir: "out"
+
+
+cost_controls:
+  max_cost_usd_per_run: 0.50
+  model: "gemini/gemini-3.5-flash"
+  fallback_models:
+    - "gemini/gemma-4-31b-it"
+    - "gemini/gemma-4-26b-a4b-it"
+  max_candidate_items: 25
+  max_fetches_per_run: 6
+  max_agent_iterations: 12
+  max_model_tokens: 4096
+  model_retries: 2
+  retry_delay_seconds: 5
+  model_timeout_seconds: 60
+  model_timeouts:
+    "gemini/gemma-4-31b-it": 120
+    "gemini/gemma-4-26b-a4b-it": 120
+
+delivery:
+  primary:
+    type: markdown_file
+    path: "data/digests/"
+  failed_path: "data/failed/"
+
+notifications:
+  firebase:
+    enabled: false
+    project_id: null
+    credentials_path: "data/firebase/service-account.json"
+    token_store_path: "data/firebase/fcm_tokens.json"
+    default_topic: "research-digest"
+    web:
+      api_key: null
+      auth_domain: null
+      storage_bucket: null
+      messaging_sender_id: null
+      app_id: null
+      measurement_id: null
+      vapid_key: null
+
+state:
+  db_path: "data/seen_urls.db"
+  retention_days: 90
+
+# Firestore (Firebase) remote persistence. Enable for Render.com / production
+# deployments where local files are ephemeral.  When enabled every auth,
+# subscriber, Telegram, saved-news and notification operation goes through
+# Firestore instead of local JSON files.  The service-account JSON must be set
+# in the FIREBASE_CREDENTIALS_JSON environment variable.
+firestore:
+  enabled: true
+  collection_prefix: "research_digest"

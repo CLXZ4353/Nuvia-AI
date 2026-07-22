@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d8e0ee">
+  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+  <title>Nuvia.AI – Homepage</title>
+  <style>
+    html, body { min-height: 100%; background: #d8e0ee; }
+    body[data-app-state="booting"] { opacity: 0; }
+  </style>
+  <link rel="stylesheet" href="/assets/css/styles.css?v=20260722-audio-chat-normal-size">
+</head>
+<body data-app-state="booting">
+  <aside id="sidebar" class="sidebar closed initializing" aria-label="Navigazione digest">
+    <div class="sidebar-header">
+      <button
+        type="button"
+        class="icon-btn sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Apri o chiudi la barra laterale"
+        aria-expanded="false"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+          <line x1="9.5" y1="4" x2="9.5" y2="20"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-collapsed-only">
+      <div class="sidebar-divider"></div>
+      <a
+        href="/"
+        class="icon-btn sidebar-home-icon-collapsed"
+        aria-label="Homepage"
+        title="Nuvia.AI – Homepage"
+        data-sidebar-key="home"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 10 9-7 9 7"></path>
+          <path d="M5 9v10h14V9"></path>
+          <path d="M9 19v-6h6v6"></path>
+        </svg>
+      </a>
+      <button
+        type="button"
+        class="icon-btn sidebar-history-icon-collapsed"
+        aria-label="Cronologia"
+        title="Cronologia"
+        aria-controls="historyAccordion"
+        data-sidebar-section="history"
+        data-sidebar-key="history"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+          <path d="M12 7v5l4 2"></path>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="icon-btn sidebar-bookmark"
+        aria-label="Notizie salvate"
+        title="Notizie salvate"
+        aria-controls="savedNewsList"
+        data-sidebar-section="saved"
+        data-sidebar-key="saved"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-3.6L6 21V4.5a1 1 0 0 1 1-1z"></path>
+        </svg>
+      </button>
+      <a
+        href="/assistant"
+        class="icon-btn sidebar-assistant-icon-collapsed"
+        aria-label="Apri Nuvia Assistant"
+        title="Nuvia Assistant"
+        data-assistant-nav
+        data-sidebar-key="assistant"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.25 11.25a8.25 8.25 0 0 1-8.25 8.25c-1.48 0-2.87-.39-4.07-1.06L3.75 20.25l1.81-4.18A8.21 8.21 0 0 1 3.75 11.25 8.25 8.25 0 0 1 12 3a8.25 8.25 0 0 1 8.25 8.25Z"></path>
+          <circle cx="8.35" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+          <circle cx="12" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+          <circle cx="15.65" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+        </svg>
+      </a>
+      <button
+        type="button"
+        class="icon-btn sidebar-settings-icon-collapsed settings-trigger"
+        aria-label="Impostazioni"
+        title="Impostazioni"
+        aria-controls="settings-page"
+        data-action="open-settings"
+        data-sidebar-key="settings"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-expanded-only">
+      <nav class="sidebar-nav-block" aria-label="Sezioni">
+        <a href="/" class="sidebar-nav-item sidebar-home-link" aria-label="Homepage" title="Nuvia.AI – Homepage" data-sidebar-key="home">
+          <span class="icon-btn sidebar-home-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 10 9-7 9 7"></path>
+              <path d="M5 9v10h14V9"></path>
+              <path d="M9 19v-6h6v6"></path>
+            </svg>
+          </span>
+          <span class="sidebar-title sidebar-home-title">Homepage</span>
+        </a>
+
+        <button
+          type="button"
+          class="sidebar-nav-item"
+          aria-label="Cronologia"
+          title="Cronologia"
+          aria-controls="historyAccordion"
+          data-sidebar-section="history"
+          data-sidebar-key="history"
+        >
+          <span class="icon-btn sidebar-history-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+              <path d="M12 7v5l4 2"></path>
+            </svg>
+          </span>
+          <span class="sidebar-title sidebar-history-title">Cronologia</span>
+        </button>
+
+        <button
+          type="button"
+          class="sidebar-nav-item"
+          aria-label="Notizie salvate"
+          title="Notizie salvate"
+          aria-controls="savedNewsList"
+          data-sidebar-section="saved"
+          data-sidebar-key="saved"
+        >
+          <span class="icon-btn sidebar-saved-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-3.6L6 21V4.5a1 1 0 0 1 1-1z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-title sidebar-saved-title">Notizie salvate</span>
+        </button>
+
+        <a href="/assistant" class="sidebar-nav-item sidebar-assistant-link" aria-label="Apri Nuvia Assistant" title="Nuvia Assistant" data-assistant-nav data-sidebar-key="assistant">
+          <span class="icon-btn sidebar-assistant-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.25 11.25a8.25 8.25 0 0 1-8.25 8.25c-1.48 0-2.87-.39-4.07-1.06L3.75 20.25l1.81-4.18A8.21 8.21 0 0 1 3.75 11.25 8.25 8.25 0 0 1 12 3a8.25 8.25 0 0 1 8.25 8.25Z"></path>
+              <circle cx="8.35" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+              <circle cx="12" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+              <circle cx="15.65" cy="11.35" r=".75" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </span>
+          <span class="sidebar-title sidebar-assistant-title">Nuvia Assistant</span>
+        </a>
+
+        <button
+          type="button"
+          class="sidebar-nav-item settings-trigger"
+          aria-label="Impostazioni"
+          title="Impostazioni"
+          aria-controls="settings-page"
+          data-action="open-settings"
+          data-sidebar-key="settings"
+        >
+          <span class="icon-btn sidebar-settings-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-title sidebar-settings-title">Impostazioni</span>
+        </button>
+      </nav>
+
+      <section class="sidebar-saved-panel sidebar-panel-hidden" data-sidebar-panel="saved" aria-label="Notizie salvate">
+        <div id="savedNewsList" class="sidebar-saved-list" data-ui="saved-list" aria-busy="true"></div>
+        <p id="savedNewsState" class="sidebar-panel-state" data-ui="saved-state" role="status" aria-live="polite">
+          Caricamento delle notizie salvate…
+        </p>
+        <p id="savedNewsEmpty" class="sidebar-saved-empty" role="status" hidden>
+          Nessuna notizia salvata.
+        </p>
+      </section>
+
+      <section class="sidebar-history-panel" data-sidebar-panel="history" aria-label="Cronologia">
+        <label class="sidebar-search" for="historySearch">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            id="historySearch"
+            type="search"
+            class="sidebar-search-input"
+            placeholder="Cerca nei digest..."
+            autocomplete="off"
+            data-ui="history-search"
+          >
+        </label>
+
+        <div id="historyAccordion" class="sidebar-list" data-ui="history-list" aria-label="Digest precedenti" aria-busy="true"></div>
+        <p id="historyState" class="sidebar-panel-state" data-ui="history-state" role="status" aria-live="polite">
+          Caricamento della cronologia…
+        </p>
+        <p id="historyEmpty" class="sidebar-history-empty" role="status" hidden>
+          Nessun digest trovato.
+        </p>
+      </section>
+    </div>
+  </aside>
+
+  <main id="canvas-container" aria-label="Digest di ricerca">
+    <canvas id="network" aria-hidden="true"></canvas>
+    <div id="robot-container" class="is-positioning" aria-hidden="true">
+      <img src="/assets/images/robot.gif" alt="" decoding="async" fetchpriority="high">
+    </div>
+
+    <header class="brand-header">
+      <a class="brand-home-link" href="/" title="Nuvia.AI – Homepage" aria-label="Nuvia.AI – Homepage">
+      <div class="brand-lockup" role="img" aria-label="Nuvia.ai">
+        <span class="brand-wordmark" aria-hidden="true">
+          <span class="brand-initial">N</span>
+          <span class="brand-tail">uvia.ai</span>
+        </span>
+
+        <svg class="brand-swoosh" viewBox="0 0 760 120" aria-hidden="true">
+          <defs>
+            <linearGradient id="brand-swoosh-shadow-gradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#91a4c8" stop-opacity="0"></stop>
+              <stop offset="0.16" stop-color="#91a4c8" stop-opacity="0.62"></stop>
+              <stop offset="0.72" stop-color="#91a4c8" stop-opacity="0.42"></stop>
+              <stop offset="1" stop-color="#91a4c8" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="brand-swoosh-light-gradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop>
+              <stop offset="0.12" stop-color="#ffffff" stop-opacity="0.96"></stop>
+              <stop offset="0.68" stop-color="#edf3fc" stop-opacity="0.94"></stop>
+              <stop offset="1" stop-color="#dce6f7" stop-opacity="0"></stop>
+            </linearGradient>
+          </defs>
+          <path
+            class="brand-swoosh-shadow"
+            d="M18 104 C198 16 480 12 742 76"
+            transform="translate(0 5)"
+          ></path>
+          <path class="brand-swoosh-stroke" d="M18 104 C198 16 480 12 742 76"></path>
+          <path class="brand-swoosh-highlight" d="M18 102 C198 14 480 10 742 74"></path>
+        </svg>
+      </div>
+      </a>
+    </header>
+
+    <section
+      id="assistant-page"
+      class="assistant-page"
+      data-ui="assistant-page"
+      aria-labelledby="assistant-page-title"
+      hidden
+    >
+      <h1 id="assistant-page-title" class="assistant-sr-only">Nuvia Assistant</h1>
+
+      <div class="assistant-chat-window" data-ui="assistant-drop-zone">
+        <div
+          class="assistant-drop-overlay"
+          data-ui="assistant-drop-overlay"
+          aria-hidden="true"
+          hidden
+        >
+          <span>Rilascia qui il file da allegare</span>
+        </div>
+
+        <section class="assistant-context" data-ui="assistant-context" aria-label="Notizia attiva" hidden>
+          <button
+            type="button"
+            class="assistant-context-close"
+            data-ui="assistant-context-close"
+            aria-label="Chiudi notizia attiva"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+          <span class="assistant-context-label">Notizia attiva</span>
+          <h2 class="assistant-context-title" data-ui="assistant-context-title"></h2>
+          <a
+            class="assistant-context-link"
+            data-ui="assistant-context-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Apri la fonte</a>
+        </section>
+
+        <div
+          class="assistant-message-list"
+          data-ui="assistant-message-list"
+          role="log"
+          aria-live="polite"
+          aria-label="Conversazione con Nuvia"
+        >
+          <div class="assistant-message assistant-message-nuvia assistant-message-assistant">
+            <div class="assistant-message-shell">
+              <span class="assistant-message-avatar" aria-hidden="true">
+                <img
+                  class="assistant-message-avatar-image"
+                  src="/assets/images/nuvia-assistant-avatar.png?v=20260722-avatar-box-restored"
+                  alt=""
+                >
+              </span>
+              <div class="assistant-message-bubble">
+                <div class="assistant-message-content">
+                  <p>Ciao, sono Nuvia!<br>Quale notizia vorresti approfondire oggi?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="assistant-status" data-ui="assistant-status" role="status" aria-live="polite" hidden></p>
+
+        <div
+          class="assistant-attachment-preview"
+          data-ui="assistant-attachment-preview"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          <span class="assistant-attachment-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m20.5 11.5-8.62 8.62a6 6 0 0 1-8.49-8.49l9.2-9.19a4 4 0 0 1 5.66 5.65l-9.2 9.2a2 2 0 1 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+            <span class="assistant-attachment-name" data-ui="assistant-attachment-name"></span>
+            <button
+              type="button"
+              class="assistant-attachment-remove"
+              data-ui="assistant-attachment-remove"
+              aria-label="Rimuovi il file allegato"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18"></path>
+              </svg>
+            </button>
+          </span>
+        </div>
+
+        <form class="assistant-composer" data-ui="assistant-composer" novalidate>
+          <input
+            type="file"
+            id="assistant-attachment-input"
+            class="assistant-attachment-input"
+            data-ui="assistant-attachment-input"
+            accept=".jpg,.jpeg,.png,.pdf,.txt,image/jpeg,image/png,application/pdf,text/plain"
+            aria-hidden="true"
+            tabindex="-1"
+            hidden
+          >
+          <button
+            type="button"
+            class="assistant-composer-button assistant-attachment-button"
+            aria-label="Allega un file"
+            data-ui="assistant-attachment-button"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m20.5 11.5-8.62 8.62a6 6 0 0 1-8.49-8.49l9.2-9.19a4 4 0 0 1 5.66 5.65l-9.2 9.2a2 2 0 1 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+          </button>
+
+          <input
+            id="assistant-message-input"
+            class="assistant-message-input"
+            type="text"
+            name="message"
+            placeholder="Scrivi un messaggio"
+            aria-label="Scrivi un messaggio"
+            autocomplete="off"
+            maxlength="4000"
+            data-ui="assistant-input"
+          >
+
+          <button
+            type="button"
+            class="assistant-composer-button assistant-record-button"
+            aria-label="Registra un messaggio vocale"
+            data-ui="assistant-record-button"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"></path>
+              <path d="M19 11a7 7 0 0 1-14 0"></path>
+              <path d="M12 18v3"></path>
+            </svg>
+          </button>
+
+          <button
+            type="submit"
+            class="assistant-composer-button assistant-send-button"
+            aria-label="Invia il messaggio"
+            data-ui="assistant-send"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 2 11 13"></path>
+              <path d="m22 2-7 20-4-9-9-4Z"></path>
+            </svg>
+          </button>
+        </form>
+
+        <div
+          class="assistant-recording-bar"
+          data-ui="assistant-recording-bar"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          <span class="assistant-recording-dot" aria-hidden="true"></span>
+          <span class="assistant-recording-label">Registrazione in corso…</span>
+          <span class="assistant-recording-time" data-ui="assistant-recording-time">00:00</span>
+          <button
+            type="button"
+            class="assistant-recording-cancel"
+            data-ui="assistant-recording-cancel"
+          >Annulla</button>
+          <button
+            type="button"
+            class="assistant-recording-stop"
+            data-ui="assistant-recording-stop"
+          >Invia</button>
+        </div>
+
+      </div>
+    </section>
+
+    <p id="digestPeriod" class="digest-period" data-ui="digest-period" aria-live="polite" hidden></p>
+
+    <div id="cards-overlay" data-ui="digest-list" aria-live="polite" aria-busy="true"></div>
+
+    <section id="digestState" class="content-state" data-ui="digest-state" data-state="ready" role="status" aria-live="polite" hidden>
+      <span class="content-state-spinner" aria-hidden="true"></span>
+      <p data-ui="digest-message"></p>
+      <button type="button" class="content-state-retry" data-action="retry-digest" hidden>Riprova</button>
+    </section>
+  </main>
+
+  <div id="settings-page" class="settings-page hidden" role="dialog" aria-modal="true" aria-labelledby="settings-page-title" aria-hidden="true">
+    <button type="button" id="settings-close-btn" class="icon-btn" aria-label="Chiudi impostazioni" data-action="close-settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <div class="settings-scroll">
+      <div class="settings-content">
+        <h1 id="settings-page-title" class="settings-sr-only" tabindex="-1">Impostazioni</h1>
+
+        <form id="settings-form" class="settings-form" novalidate>
+          <section class="settings-panel" aria-labelledby="settings-profile-title">
+            <h2 id="settings-profile-title" class="settings-panel-title">Profilo</h2>
+            <label class="settings-field settings-field-compact" for="settings-profile-email">
+              <span class="settings-field-label">Email</span>
+              <input id="settings-profile-email" class="settings-input" type="email" name="email" placeholder="Inserisci la tua email" autocomplete="email" data-settings-field="email">
+            </label>
+            <p class="settings-help">L'indirizzo resta associato al tuo account e puoi modificarlo in qualsiasi momento.</p>
+            <button type="button" class="settings-action" data-settings-action="save-email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 3h12l2 2v16H5z"></path>
+                <path d="M8 3v6h8V3M8 21v-7h8v7"></path>
+              </svg>
+              <span>Salva email</span>
+            </button>
+          </section>
+
+          <section class="settings-panel" aria-labelledby="settings-channels-title">
+            <h2 id="settings-channels-title" class="settings-panel-title">Canali di notifica</h2>
+            <label class="settings-check-row" for="settings-channel-email">
+              <input id="settings-channel-email" class="settings-checkbox" type="checkbox" name="email_notifications" data-settings-field="email-notifications">
+              <span>Email</span>
+            </label>
+            <button type="button" class="settings-action" data-settings-action="save-preferences">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 7h10M18 7h2M4 17h4M12 17h8M4 12h2M10 12h10"></path>
+                <circle cx="16" cy="7" r="2"></circle>
+                <circle cx="8" cy="12" r="2"></circle>
+                <circle cx="10" cy="17" r="2"></circle>
+              </svg>
+              <span>Salva preferenze</span>
+            </button>
+          </section>
+
+          <section class="settings-panel" aria-labelledby="settings-subscription-title">
+            <h2 id="settings-subscription-title" class="settings-panel-title">Invia il digest</h2>
+            <label class="settings-field settings-field-compact" for="settings-subscription-email">
+              <span class="settings-field-label">Email</span>
+              <input id="settings-subscription-email" class="settings-input" type="email" name="newsletter_email" placeholder="Inserisci la tua email" autocomplete="email" data-settings-field="newsletter-email">
+            </label>
+            <p class="settings-help">Invia il digest disponibile all'indirizzo indicato.</p>
+            <button type="button" class="settings-action" data-settings-action="send-newsletter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 2 9.5 14.5M22 2l-8 20-4.5-7.5L2 10z"></path>
+              </svg>
+              <span>Invia digest</span>
+            </button>
+          </section>
+
+          <section class="settings-panel" aria-labelledby="settings-telegram-title">
+            <h2 id="settings-telegram-title" class="settings-panel-title">Telegram</h2>
+            <p class="settings-help" data-ui="telegram-status" role="status" aria-live="polite">Verifica dello stato di Telegram…</p>
+            <button type="button" class="settings-action" data-settings-action="open-telegram" data-ui="telegram-open" disabled aria-disabled="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 2 9.5 14.5M22 2l-8 20-4.5-7.5L2 10z"></path>
+              </svg>
+              <span>Apri Telegram</span>
+            </button>
+          </section>
+
+          <section class="settings-panel settings-panel-push" aria-labelledby="settings-push-title">
+            <h2 id="settings-push-title" class="settings-panel-title">Notifiche push</h2>
+            <p class="settings-help" data-ui="push-status" role="status" aria-live="polite">Verifica della disponibilità delle notifiche push…</p>
+            <button type="button" class="settings-action" data-settings-action="toggle-push" aria-pressed="false" disabled aria-disabled="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M10 21h4"></path>
+              </svg>
+              <span>Gestisci notifiche push</span>
+            </button>
+            <p class="settings-note" data-push-note data-ui="push-note"></p>
+          </section>
+
+          <section class="settings-panel" aria-labelledby="settings-pause-title">
+            <h2 id="settings-pause-title" class="settings-panel-title">Sospensione notifiche</h2>
+            <span class="settings-status-pill" data-suspension-status data-ui="suspension-status" role="status" aria-live="polite">Verifica dello stato…</span>
+
+            <div class="settings-suspension-grid">
+              <label class="settings-summary-field" for="settings-pause-start">
+                <span class="settings-summary-label">Inizio</span>
+                <input id="settings-pause-start" class="settings-summary-input" type="date" name="suspension_start" data-suspension-input data-settings-field="suspension-start">
+              </label>
+              <label class="settings-summary-field settings-summary-field-icon" for="settings-pause-end">
+                <span class="settings-summary-label">Fine</span>
+                <input id="settings-pause-end" class="settings-summary-input" type="date" name="suspension_end" data-suspension-input data-settings-field="suspension-end">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                  <path d="M16 3v4M8 3v4M3 10h18"></path>
+                </svg>
+              </label>
+              <div class="settings-summary-field" aria-label="Riattivazione">
+                <span class="settings-summary-label">Riattivazione</span>
+                <output id="settings-pause-resume" class="settings-summary-input" data-ui="suspension-resume">—</output>
+              </div>
+            </div>
+
+            <div class="settings-actions-row">
+              <button type="button" class="settings-action" data-settings-action="edit-suspension">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4z"></path>
+                </svg>
+                <span>Salva sospensione</span>
+              </button>
+              <button type="button" class="settings-action settings-action-danger" data-settings-action="cancel-suspension">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 10v7M14 10v7"></path>
+                </svg>
+                <span>Annulla sospensione</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="settings-panel settings-panel-account" aria-labelledby="settings-account-title">
+            <h2 id="settings-account-title" class="settings-panel-title">Account</h2>
+            <p class="settings-help">Termina la sessione su questo dispositivo.</p>
+            <button type="button" class="settings-action settings-action-danger" data-settings-action="logout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"></path>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </section>
+        </form>
+
+        <div id="settings-feedback" class="settings-feedback" data-ui="settings-feedback" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="auth-page" class="auth-page is-login" role="dialog" aria-modal="true" aria-label="Accedi a Nuvia.ai" aria-hidden="true">
+    <div class="auth-orb auth-orb-one"></div>
+    <div class="auth-orb auth-orb-two"></div>
+    <div class="auth-panel">
+      <header class="auth-heading">
+        <a class="auth-logo" href="/login" title="Login" aria-label="Login" data-auth-logo-link>
+          <div class="brand-lockup" aria-hidden="true">
+            <span class="brand-wordmark">
+              <span class="brand-initial">N</span>
+              <span class="brand-tail">uvia.ai</span>
+            </span>
+            <svg class="brand-swoosh" viewBox="0 0 760 120">
+              <path
+                class="brand-swoosh-shadow"
+                d="M18 104 C198 16 480 12 742 76"
+                transform="translate(0 5)"
+              ></path>
+              <path class="brand-swoosh-stroke" d="M18 104 C198 16 480 12 742 76"></path>
+              <path class="brand-swoosh-highlight" d="M18 102 C198 14 480 10 742 74"></path>
+            </svg>
+          </div>
+        </a>
+        <p>Accedi per scoprire le ultime notizie settimanali sull'intelligenza artificiale</p>
+      </header>
+
+      <div class="auth-tabs" role="tablist" aria-label="Autenticazione">
+        <button id="auth-login-tab" type="button" class="auth-tab is-active" role="tab" aria-selected="true" aria-controls="auth-form-panel" data-auth-mode="login">Accedi</button>
+        <button id="auth-register-tab" type="button" class="auth-tab" role="tab" aria-selected="false" aria-controls="auth-form-panel" data-auth-mode="register">Registrati</button>
+      </div>
+
+      <section id="auth-form-panel" role="tabpanel" aria-labelledby="auth-login-tab">
+        <form id="auth-form" class="auth-form" novalidate aria-describedby="auth-feedback">
+          <div class="auth-name-row" data-register-only>
+            <label class="auth-field" for="auth-first-name">
+              <span>Nome</span>
+              <span class="auth-control">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.3"></circle><path d="M5 20c.7-3.6 3.1-5.5 7-5.5s6.3 1.9 7 5.5"></path></svg>
+                <input id="auth-first-name" type="text" name="name" placeholder="Inserisci il tuo nome" autocomplete="given-name" data-auth-field="first-name">
+              </span>
+            </label>
+            <label class="auth-field" for="auth-last-name">
+              <span>Cognome</span>
+              <span class="auth-control">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.3"></circle><path d="M5 20c.7-3.6 3.1-5.5 7-5.5s6.3 1.9 7 5.5"></path></svg>
+                <input id="auth-last-name" type="text" name="surname" placeholder="Inserisci il tuo cognome" autocomplete="family-name" data-auth-field="last-name">
+              </span>
+            </label>
+          </div>
+
+          <label class="auth-field" for="auth-email">
+            <span>Email</span>
+            <span class="auth-control">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+              <input id="auth-email" type="email" name="email" placeholder="Inserisci la tua email" autocomplete="email" required data-auth-field="email">
+            </span>
+          </label>
+
+          <label class="auth-field" for="auth-password">
+            <span>Password</span>
+            <span class="auth-control">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+              <input id="auth-password" type="password" name="password" placeholder="Inserisci la password" autocomplete="current-password" required data-auth-field="password">
+              <button type="button" class="auth-eye" aria-label="Mostra password" data-action="toggle-password">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>
+              </button>
+            </span>
+          </label>
+
+          <label class="auth-field" for="auth-confirm-password" data-register-only>
+            <span>Conferma password</span>
+            <span class="auth-control">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+              <input id="auth-confirm-password" type="password" name="confirmPassword" placeholder="Conferma la password" autocomplete="new-password" data-auth-field="confirm-password">
+              <button type="button" class="auth-eye" aria-label="Mostra password" data-action="toggle-password">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>
+              </button>
+            </span>
+          </label>
+
+          <label class="auth-check auth-remember" for="auth-remember" data-login-only>
+            <input id="auth-remember" type="checkbox" name="remember_me" data-auth-field="remember-me">
+            <span class="auth-checkmark" aria-hidden="true">✓</span>
+            <span>Resta connesso</span>
+          </label>
+
+          <section class="auth-news" data-register-only aria-labelledby="auth-notifications-title">
+            <h2 id="auth-notifications-title">Canali di notifica</h2>
+            <label class="auth-check" for="auth-channel-email">
+              <input id="auth-channel-email" type="checkbox" name="email_notifications" data-auth-field="email-notifications">
+              <span class="auth-checkmark" aria-hidden="true">✓</span>
+              <span><b>Email</b><small>Usa l'email come canale per i tuoi aggiornamenti.</small></span>
+            </label>
+            <div class="auth-telegram">
+              <h3>Telegram</h3>
+              <p>Puoi collegare Telegram al tuo profilo dopo aver creato l'account.</p>
+              <button type="button" class="auth-secondary" data-auth-action="open-telegram" data-settings-action="open-telegram" disabled aria-disabled="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 3-7.7 18-3.8-7.2L3 10.6 21 3Z"></path><path d="m9.5 13.8 4.5-4.1"></path></svg>
+                Apri Telegram
+              </button>
+            </div>
+          </section>
+
+          <p id="auth-feedback" class="auth-feedback" data-ui="auth-feedback" role="status" aria-live="polite"></p>
+          <button class="auth-submit" type="submit" data-auth-submit aria-busy="false">Accedi</button>
+        </form>
+      </section>
+    </div>
+  </section>
+
+  <div id="appFeedback" class="app-feedback" data-ui="app-feedback" role="status" aria-live="polite" hidden></div>
+
+  <template id="digest-card-template">
+    <article class="info-card" data-ui="digest-card" data-card-id tabindex="-1">
+      <div class="card-header">
+        <button type="button" class="card-saved-btn" aria-label="Salva negli elementi salvati" aria-pressed="false" data-action="toggle-save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-3.6L6 21V4.5a1 1 0 0 1 1-1z"></path>
+          </svg>
+        </button>
+        <h2 class="card-title" data-field="title"></h2>
+      </div>
+      <div class="title-underline"></div>
+      <div class="card-meta">
+        <span class="meta-value">
+          <span class="meta-label">Categoria:</span>
+          <span class="meta-content" data-field="category"></span>
+        </span>
+        <span class="meta-value">
+          <span class="meta-label">Fonte:</span>
+          <span class="meta-content" data-field="source"></span>
+        </span>
+      </div>
+      <p class="card-summary card-summary-text" data-field="summary"></p>
+      <div class="card-why-label">Perché conta:</div>
+      <p class="card-why-text" data-field="why"></p>
+      <button type="button" class="card-deepen-button" data-action="open-assistant">
+        Approfondisci la notizia
+      </button>
+      <div class="card-divider"></div>
+      <a class="card-footer" target="_blank" rel="noopener noreferrer" data-field="link">
+        <span class="footer-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"></path>
+            <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5"></path>
+          </svg>
+        </span>
+        <span class="footer-text">
+          <span class="footer-label">Link sito:</span>
+          <span class="footer-link" data-field="linkLabel"></span>
+        </span>
+        <svg class="footer-chevron" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 18l6-6-6-6"></path>
+        </svg>
+      </a>
+    </article>
+  </template>
+
+  <template id="saved-news-template">
+    <button type="button" class="saved-news-title" data-action="open-saved-news">
+      <span class="saved-news-heading" data-field="title"></span>
+      <time class="saved-news-date" data-field="date"></time>
+    </button>
+  </template>
+
+  <template id="history-digest-template">
+    <article class="accordion-item" data-ui="history-digest" data-digest-id>
+      <button type="button" class="accordion-header accordion-trigger" aria-expanded="false" data-action="toggle-history">
+        <span class="accordion-title" data-field="date"></span>
+        <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </button>
+      <div class="accordion-content accordion-panel" role="region" data-field="panel">
+        <div class="accordion-panel-inner">
+          <ul class="accordion-news-list" data-field="items"></ul>
+          <a class="accordion-read-more" data-action="open-digest">Leggi di più</a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <template id="history-news-item-template">
+    <li class="accordion-news-item">
+      <span class="accordion-news-title" data-field="title"></span>
+    </li>
+  </template>
+
+  <script type="module" src="/assets/js/app.js?v=20260722-avatar-box-restored"></script>
+</body>
+</html>

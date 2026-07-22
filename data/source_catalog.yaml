@@ -1,0 +1,307 @@
+sources:
+  - id: arxiv_ai
+    name: "arXiv - cs.AI"
+    type: rss
+    url: "https://rss.arxiv.org/rss/cs.AI"
+    max_items: 30
+    priority: low
+    tier: preprint
+    source_group: arxiv
+    max_candidates_per_run: 1
+    max_group_candidates_per_run: 1
+    max_group_entries_per_digest: 1
+    trust_score: 5
+    tags: ["paper", "research"]
+
+  - id: arxiv_cl
+    name: "arXiv - cs.CL (NLP/LLM)"
+    type: rss
+    url: "https://rss.arxiv.org/rss/cs.CL"
+    max_items: 30
+    priority: low
+    tier: preprint
+    source_group: arxiv
+    max_candidates_per_run: 1
+    max_group_candidates_per_run: 1
+    max_group_entries_per_digest: 1
+    trust_score: 5
+    tags: ["paper", "nlp", "llm"]
+
+  - id: arxiv_lg
+    name: "arXiv - cs.LG (Machine Learning)"
+    type: rss
+    url: "https://rss.arxiv.org/rss/cs.LG"
+    max_items: 20
+    priority: low
+    tier: preprint
+    source_group: arxiv
+    max_candidates_per_run: 1
+    max_group_candidates_per_run: 1
+    max_group_entries_per_digest: 1
+    trust_score: 5
+    tags: ["paper", "machine-learning"]
+
+  - id: huggingface_papers
+    name: "Hugging Face - Daily Papers"
+    type: scrape
+    url: "https://huggingface.co/papers"
+    selector: "article"
+    max_items: 20
+    priority: high
+    tier: community
+    max_candidates_per_run: 3
+    trust_score: 4
+    tags: ["paper", "community"]
+
+  - id: openai_news
+    name: "OpenAI - News"
+    type: rss
+    url: "https://openai.com/news/rss.xml"
+    max_items: 10
+    priority: high
+    tier: official
+    max_candidates_per_run: 2
+    trust_score: 5
+    tags: ["lab", "model", "research"]
+
+  - id: anthropic_research
+    name: "Anthropic - Research"
+    type: scrape
+    url: "https://www.anthropic.com/research"
+    selector: "main a[href^='/research/']:not([href*='/team/'])"
+    title_selector: "h2, h3, h4"
+    max_items: 10
+    priority: high
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "research", "safety"]
+
+  - id: deepmind_blog
+    name: "Google DeepMind - Blog"
+    type: scrape
+    url: "https://deepmind.google/blog/"
+    max_items: 12
+    priority: high
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "model", "research"]
+
+  - id: google_research_blog
+    name: "Google Research - Blog"
+    type: rss
+    url: "https://research.google/blog/rss/"
+    max_items: 12
+    priority: high
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "research"]
+
+  - id: meta_ai_blog
+    name: "Meta AI - Blog"
+    type: scrape
+    url: "https://ai.meta.com/blog/"
+    check_for_changes: true
+    priority: low
+    tier: official
+    max_candidates_per_run: 1
+    trust_score: 5
+    tags: ["lab", "model", "research"]
+
+  - id: mistral_news
+    name: "Mistral AI - News"
+    type: scrape
+    url: "https://mistral.ai/news/"
+    selector: "a[href^='/news/']"
+    title_selector: "p.text-h6, h2, h3, h4"
+    max_items: 10
+    priority: medium
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "model"]
+
+  - id: qwen_blog
+    name: "Qwen - Blog"
+    type: rss
+    url: "https://qwenlm.github.io/blog/index.xml"
+    max_items: 12
+    priority: high
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "model", "multimodal", "safety", "training"]
+
+  - id: kimi_research_blog
+    name: "Kimi - Research Blog"
+    type: scrape
+    url: "https://www.kimi.com/blog/"
+    selector: "div.article-menu-cards div.menu-card:has(a[href^='/blog/'])"
+    max_items: 12
+    priority: high
+    tier: official
+    max_candidates_per_run: 4
+    trust_score: 5
+    tags: ["lab", "model", "agents", "research"]
+
+  - id: lmarena
+    name: "LM Arena - Leaderboard"
+    type: scrape
+    url: "https://arena.ai/"
+    check_for_changes: true
+    priority: medium
+    tier: benchmark
+    max_candidates_per_run: 1
+    trust_score: 4
+    tags: ["benchmark", "leaderboard"]
+
+  - id: huggingface_blog
+    name: "Hugging Face - Blog"
+    type: scrape
+    url: "https://huggingface.co/blog"
+    selector: "main a[href^='/blog/']"
+    title_selector: "h2, h3, h4"
+    max_items: 12
+    priority: medium
+    tier: community
+    max_candidates_per_run: 3
+    trust_score: 4
+    tags: ["model", "community", "infrastructure"]
+
+  - id: nvidia_developer_ai
+    name: "NVIDIA Technical Blog - Generative AI"
+    type: auto
+    url: "https://developer.nvidia.com/blog/category/generative-ai/"
+    max_items: 8
+    priority: low
+    tier: official
+    max_candidates_per_run: 3
+    trust_score: 4
+    tags: ["infrastructure", "efficiency"]
+
+  - id: higgsfield
+    name: "Higgsfield AI"
+    type: scrape
+    url: "https://higgsfield.ai/"
+    check_for_changes: true
+    priority: medium
+    tier: product
+    max_candidates_per_run: 1
+    trust_score: 4
+    tags: ["video", "generative-ai", "product"]
+
+  - id: midjourney
+    name: "Midjourney"
+    type: rss
+    url: "https://updates.midjourney.com/rss/"
+    max_items: 15
+    priority: medium
+    tier: product
+    max_candidates_per_run: 3
+    trust_score: 4
+    tags: ["image", "generative-ai", "product"]
+
+  - id: krea_blog
+    name: "Krea - Blog"
+    type: scrape
+    url: "https://www.krea.ai/blog"
+    selector: "main a[href^='/blog/']:not([href*='/category/'])"
+    title_selector: "h2, h3"
+    max_items: 12
+    priority: medium
+    tier: product
+    max_candidates_per_run: 3
+    trust_score: 4
+    tags: ["image", "video", "model", "generative-ai", "product"]
+
+  - id: meshy_blog
+    name: "Meshy - Blog"
+    type: scrape
+    url: "https://www.meshy.ai/blog"
+    selector: "main a[href^='/blog/']:not([href*='/category/'])"
+    title_selector: "h2, h3"
+    max_items: 12
+    priority: low
+    tier: product
+    max_candidates_per_run: 2
+    trust_score: 4
+    tags: ["3d", "model", "generative-ai", "product"]
+
+  - id: luma_labs
+    name: "Luma Labs"
+    type: scrape
+    url: "https://lumalabs.ai/"
+    check_for_changes: true
+    priority: medium
+    tier: product
+    max_candidates_per_run: 1
+    trust_score: 4
+    tags: ["video", "3d", "generative-ai"]
+
+  - id: runwayml
+    name: "Runway"
+    type: scrape
+    url: "https://runwayml.com/"
+    check_for_changes: true
+    priority: medium
+    tier: product
+    max_candidates_per_run: 1
+    trust_score: 4
+    tags: ["video", "generative-ai", "product"]
+
+  - id: kling_ai
+    name: "Kling AI"
+    type: scrape
+    url: "https://kling.ai/"
+    check_for_changes: true
+    priority: medium
+    tier: product
+    max_candidates_per_run: 1
+    trust_score: 4
+    tags: ["video", "generative-ai", "product"]
+
+  - id: google_labs
+    name: "Google Labs"
+    type: scrape
+    url: "https://labs.google/"
+    check_for_changes: true
+    priority: medium
+    tier: official
+    max_candidates_per_run: 1
+    trust_score: 5
+    tags: ["lab", "generative-ai", "product"]
+
+  - id: adobe_firefly_ai_video
+    name: "Adobe Firefly - AI Video Generator"
+    type: scrape
+    url: "https://www.adobe.com/products/firefly/features/ai-video-generator.html"
+    check_for_changes: true
+    priority: medium
+    tier: official
+    max_candidates_per_run: 1
+    trust_score: 5
+    tags: ["video", "generative-ai", "product"]
+
+  - id: adobe_firefly_image_to_video
+    name: "Adobe Firefly - Image to Video"
+    type: scrape
+    url: "https://www.adobe.com/products/firefly/features/image-to-video.html"
+    check_for_changes: true
+    priority: medium
+    tier: official
+    max_candidates_per_run: 1
+    trust_score: 5
+    tags: ["video", "image-to-video", "generative-ai"]
+
+  - id: deepmind_veo
+    name: "Google DeepMind - Veo"
+    type: scrape
+    url: "https://deepmind.google/models/veo"
+    check_for_changes: true
+    priority: high
+    tier: official
+    max_candidates_per_run: 1
+    trust_score: 5
+    tags: ["video", "model", "generative-ai"]

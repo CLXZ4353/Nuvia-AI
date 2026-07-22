@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sample AI Research Feed</title>
+    <link>https://example.com/research</link>
+    <description>Feed locale per la demo offline del Research Digest Agent.</description>
+    <item>
+      <title>Benchmark agents improves tool-use evaluation</title>
+      <link>https://example.com/research/agent-benchmark</link>
+      <pubDate>2026-06-20</pubDate>
+      <description>Un benchmark valuta agenti AI su task realistici con strumenti esterni. I risultati mostrano differenze misurabili tra modelli recenti.</description>
+    </item>
+    <item>
+      <title>Open model release focuses on efficient inference</title>
+      <link>https://example.com/research/efficient-model</link>
+      <pubDate>2026-06-19</pubDate>
+      <description>Un nuovo modello aperto riduce la latenza mantenendo prestazioni competitive. La scheda tecnica riporta test riproducibili su benchmark pubblici.</description>
+    </item>
+    <item>
+      <title>Safety paper studies robust refusal behavior</title>
+      <link>https://example.com/research/safety-refusal</link>
+      <pubDate>2026-06-18</pubDate>
+      <description>Un paper analizza il comportamento di rifiuto dei modelli in scenari avversari. Lo studio confronta metodi di valutazione e mitigazione.</description>
+    </item>
+  </channel>
+</rss>
