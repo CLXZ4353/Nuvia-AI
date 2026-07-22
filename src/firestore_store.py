@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import threading
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -47,6 +48,9 @@ def _get_client(config: dict | None = None) -> gcp_firestore.Client | None:
             credentials_json = os.getenv("FIREBASE_CREDENTIALS_JSON") or ""
             if not project_id or not credentials_json:
                 return None
+            # Normalise: strip surrounding whitespace and condense embedded
+            # newlines so the env-var value survives Render's paste.
+            credentials_json = re.sub(r"\s+", " ", credentials_json.strip())
             from google.oauth2 import service_account
 
             creds = service_account.Credentials.from_service_account_info(
