@@ -5342,51 +5342,55 @@ def _render_telegram_open_script() -> str:
 
 def _send_email(message: EmailMessage) -> None:
     host = os.environ["SMTP_HOST"]
-    port = int(os.getenv("SMTP_PORT", "587"))
+    configured_port = int(os.getenv("SMTP_PORT", "587"))
     username = _smtp_username(host)
     password = os.getenv("SMTP_PASSWORD")
     use_tls = os.getenv("SMTP_USE_TLS", "true").casefold() not in {"0", "false", "no"}
 
-    # Pre-flight: verifica rapida di raggiungibilità per fallire subito
-    # su errori di rete invece di attendere il timeout SMTP.
-    _smtp_check_reachable(host, port)
-
-    with smtplib.SMTP(host, port, timeout=10) as smtp:
-        if use_tls:
-            smtp.starttls()
-        if username and password:
-            smtp.login(username, password)
-        smtp.send_message(message)
-
-
-def _smtp_check_reachable(host: str, port: int) -> None:
-    """Solleva OSError subito se host:port non è raggiungibile.
-
-    Tenta tutti gli indirizzi (IPv4 / IPv6) come fa socket.create_connection,
-    perché su Render l'IPv6 potrebbe non essere instradato mentre IPv4 sì.
-    """
-    import socket as _socket
-
-    try:
-        addrs = _socket.getaddrinfo(host, port, _socket.AF_UNSPEC, _socket.SOCK_STREAM)
-    except _socket.gaierror as exc:
-        raise OSError(f"SMTP host irrisolvibile: {host}:{port} ({exc.args[1]})") from exc
-
+    # Render blocca spesso la porta 587 (SMTP submission), mentre la 465
+    # (SMTPS implicito) di solito funziona.  Proviamo entrambe.
     last_error: OSError | None = None
-    for family, type_, proto, _cname, sockaddr in addrs:
-        sock = _socket.socket(family, type_, proto)
-        sock.settimeout(8.0)
+    for attempt_port in (configured_port, 465 if configured_port == 587 else 587):
         try:
-            sock.connect(sockaddr)
-            sock.close()
+            _smtp_try_deliver(host, attempt_port, use_tls, username, password, message)
             return
         except OSError as exc:
             last_error = exc
-            sock.close()
-
+            logger.info("SMTP %s:%s non raggiungibile, provo alternativa...", host, attempt_port)
     raise OSError(
-        f"SMTP server non raggiungibile: {host}:{port} — nessun indirizzo disponibile"
+        f"SMTP server non raggiungibile: {host} — nessuna porta disponibile "
+        f"(tentate {configured_port} e {465 if configured_port == 587 else 587})"
     ) from last_error
+
+
+def _smtp_try_deliver(
+    host: str,
+    port: int,
+    use_tls: bool,
+    username: str | None,
+    password: str | None,
+    message: EmailMessage,
+) -> None:
+    """Tenta la consegna SMTP su *host:port*.
+
+    Solleva *solo* errori di connessione (sottoclassi di OSError: timeout,
+    rifiutata, irraggiungibile) in modo che il chiamante ritenti su porta
+    alternativa.  Gli errori applicativi (smtplib.SMTPException, es.
+    autenticazione, destinatario) NON sono OSError e si propagano subito
+    senza ritentare.
+    """
+    if port == 465:
+        with smtplib.SMTP_SSL(host, port, timeout=10) as smtp:
+            if username and password:
+                smtp.login(username, password)
+            smtp.send_message(message)
+    else:
+        with smtplib.SMTP(host, port, timeout=10) as smtp:
+            if use_tls:
+                smtp.starttls()
+            if username and password:
+                smtp.login(username, password)
+            smtp.send_message(message)
 
 
 def _smtp_username(host: str) -> str | None:
