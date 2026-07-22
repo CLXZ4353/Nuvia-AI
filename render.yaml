@@ -2,7 +2,7 @@
 # https://render.com/docs/blueprint-spec
 services:
   - type: web
-    name: research-digest
+    name: nuvia-ai
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: bash scripts/start-render.sh
