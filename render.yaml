@@ -61,3 +61,9 @@ services:
         value: "true"
       - key: TELEGRAM_DIGEST_CONFIG_PATH
         value: config.yaml
+
+      # Inviare email via SendGrid API (HTTPS) invece di SMTP.
+      # Render blocca le porte SMTP sul free tier.  Ottieni una chiave
+      # gratuita su https://sendgrid.com e impostala qui.
+      - key: SENDGRID_API_KEY
+        sync: false

@@ -3810,13 +3810,17 @@ def subscribe_and_send_newsletter(email_address: str, *, user_id: str | None = N
             logger.exception("Invio SMTP della newsletter non riuscito (rete); messaggio salvato in outbox")
             _save_outbox_message(message)
             err_msg = str(exc).rstrip(".")
+            hint = (
+                " Se sei su Render, configura SENDGRID_API_KEY oppure usa un Relay SMTP esterno."
+                if "Network is unreachable" in err_msg or "nessuna porta" in err_msg
+                else ""
+            )
             return NewsletterResult(
                 ok=False,
                 title="Server email non raggiungibile",
                 message=(
-                    f"Connessione SMTP non riuscita: {err_msg}. "
-                    "Il messaggio è stato salvato in outbox; verifica le credenziali SMTP "
-                    "nelle impostazioni del server e riprova."
+                    f"Connessione SMTP non riuscita: {err_msg}.{hint} "
+                    "Il messaggio è stato salvato in outbox."
                 ),
                 email=normalized_email,
             )
@@ -5341,14 +5345,22 @@ def _render_telegram_open_script() -> str:
 
 
 def _send_email(message: EmailMessage) -> None:
+    """Invia *message* via SMTP o, in ambiente cloud che blocca le porte
+    SMTP, via API HTTP (SendGrid / Mailgun)."""
+
+    # 1. Se SENDGRID_API_KEY è configurata, usa l'API REST (HTTPS).
+    sendgrid_key = os.getenv("SENDGRID_API_KEY", "").strip()
+    if sendgrid_key:
+        _send_via_sendgrid(sendgrid_key, message)
+        return
+
+    # 2. Fallback SMTP con tentativo su porte alternative.
     host = os.environ["SMTP_HOST"]
     configured_port = int(os.getenv("SMTP_PORT", "587"))
     username = _smtp_username(host)
     password = os.getenv("SMTP_PASSWORD")
     use_tls = os.getenv("SMTP_USE_TLS", "true").casefold() not in {"0", "false", "no"}
 
-    # Render blocca spesso la porta 587 (SMTP submission), mentre la 465
-    # (SMTPS implicito) di solito funziona.  Proviamo entrambe.
     last_error: OSError | None = None
     for attempt_port in (configured_port, 465 if configured_port == 587 else 587):
         try:
@@ -5361,6 +5373,48 @@ def _send_email(message: EmailMessage) -> None:
         f"SMTP server non raggiungibile: {host} — nessuna porta disponibile "
         f"(tentate {configured_port} e {465 if configured_port == 587 else 587})"
     ) from last_error
+
+
+def _send_via_sendgrid(api_key: str, message: EmailMessage) -> None:
+    """Consegna via SendGrid Web API v3 (HTTPS)."""
+    to = ", ".join(str(a) for a in message.get_all("To", []))
+    subject = str(message.get("Subject", ""))
+    # Preferisci HTML, altrimenti testo piano
+    html_part = None
+    text_part = None
+    for part in message.walk():
+        ct = part.get_content_type()
+        if ct == "text/html" and html_part is None:
+            html_part = part.get_content()
+        elif ct == "text/plain" and text_part is None:
+            text_part = part.get_content()
+    content = []
+    if text_part:
+        content.append({"type": "text/plain", "value": text_part})
+    if html_part:
+        content.append({"type": "text/html", "value": html_part})
+    if not content:
+        content.append({"type": "text/plain", "value": message.get_content() or ""})
+
+    payload = {
+        "personalizations": [{"to": [{"email": a.strip()} for a in to.split(",") if a.strip()]}],
+        "from": {"email": str(message.get("From", ""))},
+        "subject": subject,
+        "content": content,
+    }
+    response = httpx.post(
+        "https://api.sendgrid.com/v3/mail/send",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+        timeout=30,
+    )
+    if response.status_code >= 400:
+        raise OSError(
+            f"SendGrid API error {response.status_code}: {response.text[:200]}"
+        )
 
 
 def _smtp_try_deliver(
