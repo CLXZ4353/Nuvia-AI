@@ -5351,7 +5351,7 @@ def _send_email(message: EmailMessage) -> None:
     # su errori di rete invece di attendere il timeout SMTP.
     _smtp_check_reachable(host, port)
 
-    with smtplib.SMTP(host, port, timeout=20) as smtp:
+    with smtplib.SMTP(host, port, timeout=10) as smtp:
         if use_tls:
             smtp.starttls()
         if username and password:
@@ -5360,20 +5360,33 @@ def _send_email(message: EmailMessage) -> None:
 
 
 def _smtp_check_reachable(host: str, port: int) -> None:
-    """Solleva OSError subito se host:port non è raggiungibile."""
+    """Solleva OSError subito se host:port non è raggiungibile.
+
+    Tenta tutti gli indirizzi (IPv4 / IPv6) come fa socket.create_connection,
+    perché su Render l'IPv6 potrebbe non essere instradato mentre IPv4 sì.
+    """
     import socket as _socket
 
     try:
-        addr = _socket.getaddrinfo(host, port, _socket.AF_UNSPEC, _socket.SOCK_STREAM)
+        addrs = _socket.getaddrinfo(host, port, _socket.AF_UNSPEC, _socket.SOCK_STREAM)
     except _socket.gaierror as exc:
         raise OSError(f"SMTP host irrisolvibile: {host}:{port} ({exc.args[1]})") from exc
-    family, type_, proto, _cname, sockaddr = addr[0]
-    sock = _socket.socket(family, type_, proto)
-    sock.settimeout(5.0)
-    try:
-        sock.connect(sockaddr)
-    finally:
-        sock.close()
+
+    last_error: OSError | None = None
+    for family, type_, proto, _cname, sockaddr in addrs:
+        sock = _socket.socket(family, type_, proto)
+        sock.settimeout(8.0)
+        try:
+            sock.connect(sockaddr)
+            sock.close()
+            return
+        except OSError as exc:
+            last_error = exc
+            sock.close()
+
+    raise OSError(
+        f"SMTP server non raggiungibile: {host}:{port} — nessun indirizzo disponibile"
+    ) from last_error
 
 
 def _smtp_username(host: str) -> str | None:
