@@ -3707,6 +3707,13 @@ class DigestRequestHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return None
 
+    def send_error(self, code, message=None, explain=None):
+        """Override per evitare BrokenPipeError quando il client si disconnette."""
+        try:
+            super().send_error(code, message, explain)
+        except (BrokenPipeError, ConnectionError, OSError):
+            pass
+
     def _send(
         self,
         payload: bytes,
@@ -3720,7 +3727,10 @@ class DigestRequestHandler(BaseHTTPRequestHandler):
             self.send_header(str(name), str(value))
         self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
-        self.wfile.write(payload)
+        try:
+            self.wfile.write(payload)
+        except (BrokenPipeError, ConnectionError, OSError):
+            pass
 
 
 def configure_notification_suspension(start_value: str, end_value: str) -> NewsletterResult:
@@ -3796,13 +3806,30 @@ def subscribe_and_send_newsletter(email_address: str, *, user_id: str | None = N
     if _smtp_configured():
         try:
             _send_email(message)
+        except OSError as exc:
+            logger.exception("Invio SMTP della newsletter non riuscito (rete); messaggio salvato in outbox")
+            _save_outbox_message(message)
+            err_msg = str(exc).rstrip(".")
+            return NewsletterResult(
+                ok=False,
+                title="Server email non raggiungibile",
+                message=(
+                    f"Connessione SMTP non riuscita: {err_msg}. "
+                    "Il messaggio è stato salvato in outbox; verifica le credenziali SMTP "
+                    "nelle impostazioni del server e riprova."
+                ),
+                email=normalized_email,
+            )
         except Exception:
             logger.exception("Invio SMTP della newsletter non riuscito; messaggio salvato in outbox")
             _save_outbox_message(message)
             return NewsletterResult(
                 ok=False,
                 title="Invio email non riuscito",
-                message="La richiesta Ã¨ stata salvata, ma il digest non puÃ² essere inviato ora. Riprova piÃ¹ tardi.",
+                message=(
+                    "La richiesta è stata salvata, ma il digest non può essere inviato ora. "
+                    "Riprova più tardi."
+                ),
                 email=normalized_email,
             )
         return NewsletterResult(
@@ -5319,12 +5346,34 @@ def _send_email(message: EmailMessage) -> None:
     username = _smtp_username(host)
     password = os.getenv("SMTP_PASSWORD")
     use_tls = os.getenv("SMTP_USE_TLS", "true").casefold() not in {"0", "false", "no"}
+
+    # Pre-flight: verifica rapida di raggiungibilità per fallire subito
+    # su errori di rete invece di attendere il timeout SMTP.
+    _smtp_check_reachable(host, port)
+
     with smtplib.SMTP(host, port, timeout=20) as smtp:
         if use_tls:
             smtp.starttls()
         if username and password:
             smtp.login(username, password)
         smtp.send_message(message)
+
+
+def _smtp_check_reachable(host: str, port: int) -> None:
+    """Solleva OSError subito se host:port non è raggiungibile."""
+    import socket as _socket
+
+    try:
+        addr = _socket.getaddrinfo(host, port, _socket.AF_UNSPEC, _socket.SOCK_STREAM)
+    except _socket.gaierror as exc:
+        raise OSError(f"SMTP host irrisolvibile: {host}:{port} ({exc.args[1]})") from exc
+    family, type_, proto, _cname, sockaddr = addr[0]
+    sock = _socket.socket(family, type_, proto)
+    sock.settimeout(5.0)
+    try:
+        sock.connect(sockaddr)
+    finally:
+        sock.close()
 
 
 def _smtp_username(host: str) -> str | None:
